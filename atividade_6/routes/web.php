@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('home');
@@ -26,3 +27,4 @@ Route::resource('categories', CategoryController::class);
 Route::resource('authors', AuthorController::class);
 Route::resource('publishers', PublisherController::class);
 Route::resource('books', BookController::class)->except(['create', 'store']);
+Route::resource('users', UserController::class)->except(['create', 'store', 'destroy']);
