@@ -10,7 +10,7 @@ class PublisherController extends Controller
 
     public function index()
     {
-        $publishers = Category::all();
+        $publishers = Publisher::all();
         return view('publishers.index', compact('publishers'));
     }
 
@@ -27,7 +27,7 @@ class PublisherController extends Controller
             'name' => 'required|string|unique:publishers|max:255',
         ]);
 
-        Category::create($request->all());
+        Publisher::create($request->all());
 
         return redirect()->route('publishers.index')->with('success', 'Editora criada com sucesso.');
     }
@@ -53,14 +53,14 @@ class PublisherController extends Controller
 
         $publisher->update($request->all());
 
-        return redirect()->route('publisher.index')->with('success', 'Editora atualizada com sucesso.');
+        return redirect()->route('publishers.index')->with('success', 'Editora atualizada com sucesso.');
     }
 
     // Remove uma Editora do banco de dados
     public function destroy(Publisher $publisher)
     {
-        $category->delete();
+        $publisher->delete();
 
-        return redirect()->route('publisher.index')->with('success', 'Editora excluída com sucesso.');
+        return redirect()->route('publishers.index')->with('success', 'Editora excluída com sucesso.');
     }
 }
