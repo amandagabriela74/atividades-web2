@@ -21,7 +21,7 @@ Route::get('/books/create-select', [BookController::class, 'createWithSelect'])-
 Route::post('/books/create-select', [BookController::class, 'storeWithSelect'])->name('books.store.select');
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::resource('categories', CategoryController::class);
 Route::resource('authors', AuthorController::class);
 Route::resource('publishers', PublisherController::class);
