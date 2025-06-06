@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BorrowingController;
 
 Route::get('/', function () {
     return view('home');
@@ -21,6 +22,14 @@ Route::post('/books/create-id-number', [BookController::class, 'storeWithId'])->
 Route::get('/books/create-select', [BookController::class, 'createWithSelect'])->name('books.create.select');
 Route::post('/books/create-select', [BookController::class, 'storeWithSelect'])->name('books.store.select');
 
+// Rota para registrar um empréstimo
+Route::post('/books/{book}/borrow', [BorrowingController::class, 'store'])->name('books.borrow');
+
+// Rota para listar o histórico de empréstimos de um usuário
+Route::get('/users/{user}/borrowings', [BorrowingController::class, 'userBorrowings'])->name('users.borrowings');
+
+// Rota para registrar a devolução
+Route::patch('/borrowings/{borrowing}/return', [BorrowingController::class, 'returnBook'])->name('borrowings.return');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::resource('categories', CategoryController::class);
