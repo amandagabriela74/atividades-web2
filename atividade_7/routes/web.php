@@ -22,6 +22,8 @@ Route::post('/books/create-id-number', [BookController::class, 'storeWithId'])->
 Route::get('/books/create-select', [BookController::class, 'createWithSelect'])->name('books.create.select');
 Route::post('/books/create-select', [BookController::class, 'storeWithSelect'])->name('books.store.select');
 
+Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+
 // Rota para registrar um empréstimo
 Route::post('/books/{book}/borrow', [BorrowingController::class, 'store'])->name('books.borrow');
 
@@ -35,5 +37,5 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::resource('categories', CategoryController::class);
 Route::resource('authors', AuthorController::class);
 Route::resource('publishers', PublisherController::class);
-Route::resource('books', BookController::class)->except(['create', 'store']);
+Route::resource('books', BookController::class)->except(['create', 'store', 'destroy']);
 Route::resource('users', UserController::class)->except(['create', 'store', 'destroy']);

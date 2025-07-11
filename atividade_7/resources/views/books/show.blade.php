@@ -3,29 +3,40 @@
 @section('content')
 <div class="container">
     <h1 class="my-4">Detalhes do Livro</h1>
-
     <div class="card mb-4">
         <div class="card-header">
             <strong>Título:</strong> {{ $book->title }}
         </div>
-        <div class="card-body">
-            <p><strong>Autor:</strong>
-                <a href="{{ route('authors.show', $book->author->id) }}">
-                    {{ $book->author->name }}
-                </a>
-            </p>
-            <p><strong>Editora:</strong>
-                <a href="{{ route('publishers.show', $book->publisher->id) }}">
-                    {{ $book->publisher->name }}
-                </a>
-            </p>
-            <p><strong>Categoria:</strong>
-                <a href="{{ route('categories.show', $book->category->id) }}">
-                    {{ $book->category->name }}
-                </a>
-            </p>
+        <div class="card-body d-flex align-items-start">
+            {{-- Capa do livro --}}
+            <div class="me-4">
+                <img src="{{ $book->getCoverImageUrl() }}" 
+                    alt="Capa do Livro" 
+                    class="img-thumbnail shadow-sm" 
+                    style="max-width: 150px;">
+            </div>
+
+            {{-- Informações --}}
+            <div>
+                <p><strong>Autor:</strong>
+                    <a href="{{ route('authors.show', $book->author->id) }}">
+                        {{ $book->author->name }}
+                    </a>
+                </p>
+                <p><strong>Editora:</strong>
+                    <a href="{{ route('publishers.show', $book->publisher->id) }}">
+                        {{ $book->publisher->name }}
+                    </a>
+                </p>
+                <p><strong>Categoria:</strong>
+                    <a href="{{ route('categories.show', $book->category->id) }}">
+                        {{ $book->category->name }}
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
+
 
     <h5>Emprestimos do Livro: <strong>{{ $book->title }}</strong></h1>
 

@@ -44,7 +44,7 @@
                         </a>
 
                         <!-- Botão de Deletar -->
-                        <form action="{{ route('books.destroy', $book->id) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('books.destroy', $book->id) }}" method="POST" enctype="multipart/form-data" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja excluir este livro?')">

@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="my-4">Editar Livro</h1>
 
-    <form action="{{ route('books.update', $book) }}" method="POST">
+    <form action="{{ route('books.update', $book) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -66,6 +66,21 @@
                     {{ $message }}
                 </div>
             @enderror
+        </div>
+
+                {{-- Capa atual --}}
+        <div class="mb-3">
+            <label class="form-label">Imagem de capa atual</label><br>
+            <img src="{{ $book->getCoverImageUrl() }}" 
+                 alt="Capa do Livro" 
+                 class="img-thumbnail" 
+                 style="max-height: 150px;">
+        </div>
+
+        {{-- Nova imagem --}}
+        <div class="mb-3">
+            <label for="cover_image" class="form-label">Nova imagem de capa (opcional)</label>
+            <input type="file" name="cover_image" id="cover_image" class="form-control" accept="image/*">
         </div>
 
         <button type="submit" class="btn btn-success">Atualizar</button>
