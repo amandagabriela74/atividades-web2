@@ -15,6 +15,11 @@ class BorrowingController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
+         // Verifica empréstimo aberto no pivot (borrowings) do livro
+        if ($book->hasOpenBorrowing()) {
+            return redirect()->back()->withErrors('Este livro já está emprestado e não foi devolvido.');
+        }
+
         Borrowing::create([
             'user_id' => $request->user_id,
             'book_id' => $book->id,

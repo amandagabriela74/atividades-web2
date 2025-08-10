@@ -41,4 +41,10 @@ class Book extends Model
             ? asset('storage/' . $this->cover_image)
             : asset('/storage/default/default-cover.jpg');
     }
+
+    public function hasOpenBorrowing()
+    {
+        return $this->users()->wherePivotNull('returned_at')->exists();
+    }
+
 }

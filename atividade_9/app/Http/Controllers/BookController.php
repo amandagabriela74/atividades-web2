@@ -110,7 +110,10 @@ class BookController extends Controller
         // Carregar todos os usuários para o formulário de empréstimo
         $users = User::all();
 
-        return view('books.show', compact('book','users'));
+        // Verifica se livro está emprestado
+        $isBorrowed = $book->hasOpenBorrowing();
+
+        return view('books.show', compact('book','users', 'isBorrowed'));
     }
 
     public function index()
