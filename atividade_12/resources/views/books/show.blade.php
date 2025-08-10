@@ -1,0 +1,128 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <h1 class="my-4">Detalhes do Livro</h1>
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>Título:</strong> {{ $book->title }}
+        </div>
+        <div class="card-body d-flex align-items-start">
+            {{-- Capa do livro --}}
+            <div class="me-4">
+                <img src="{{ $book->getCoverImageUrl() }}" 
+                    alt="Capa do Livro" 
+                    class="img-thumbnail shadow-sm" 
+                    style="max-width: 150px;">
+            </div>
+
+            {{-- Informações --}}
+            <div>
+                <p><strong>Autor:</strong>
+                    <a href="{{ route('authors.show', $book->author->id) }}">
+                        {{ $book->author->name }}
+                    </a>
+                </p>
+                <p><strong>Editora:</strong>
+                    <a href="{{ route('publishers.show', $book->publisher->id) }}">
+                        {{ $book->publisher->name }}
+                    </a>
+                </p>
+                <p><strong>Categoria:</strong>
+                    <a href="{{ route('categories.show', $book->category->id) }}">
+                        {{ $book->category->name }}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <h5>Emprestimos do Livro: <strong>{{ $book->title }}</strong></h1>
+
+    <!-- Formulário para Empréstimos -->
+    <div class="card mb-4 ">
+        <div class="card-header">Registrar Empréstimo</div>
+        @if($borrowedCount >= 5)
+            <div class="alert alert-warning">Você atingiu o limite máximo de 5 livros emprestados.</div>
+        @endif
+        @if($debit > 0)
+            <div class="alert alert-danger">
+                Você possui uma multa pendente de R$ {{ number_format($debit, 2) }}. Pagamento obrigatório para realizar novos empréstimos.
+            </div>
+        @endif
+        @if($isBorrowed)
+            <div class="alert alert-warning">
+                Este livro está atualmente emprestado e não disponível.
+            </div>
+        @else
+            <div class="card-body">
+                <form action="{{ route('books.borrow', $book) }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="user_id" class="form-label">Usuário</label>
+                        <select class="form-select" id="user_id" name="user_id" required>
+                            <option value="" selected>Selecione um usuário</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success" @if($borrowedCount >= 5 || $debit > 0) disabled @endif>Registrar Empréstimo</button>
+                </form>
+            </div>
+        @endif
+
+    </div>
+
+<!-- Histórico de Empréstimos -->
+<div class="card">
+    <div class="card-header">Histórico de Empréstimos</div>
+    <div class="card-body">
+        @if($book->users->isEmpty())
+            <p>Nenhum empréstimo registrado.</p>
+        @else
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Data de Empréstimo</th>
+                        <th>Data de Devolução</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+    @foreach($book->users as $user)
+        <tr>
+            <td>
+                <a href="{{ route('users.show', $user->id) }}">
+                    {{ $user->name }}
+                </a>
+            </td>
+            <td>{{ $user->pivot->borrowed_at }}</td>
+            <td>{{ $user->pivot->returned_at ?? 'Em Aberto' }}</td>
+            <td>
+                @if(is_null($user->pivot->returned_at))
+                    <form action="{{ route('borrowings.return', $user->pivot->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button class="btn btn-warning btn-sm">Devolver</button>
+                    </form>
+                @endif
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+            </table>
+        @endif
+    </div>
+</div>
+
+    
+
+    <a href="{{ route('books.index') }}" class="btn btn-secondary mt-3">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+</div>
+@endsection
+
