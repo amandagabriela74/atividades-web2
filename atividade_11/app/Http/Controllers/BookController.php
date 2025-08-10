@@ -116,7 +116,10 @@ class BookController extends Controller
         $currentUser = auth()->user();
         $borrowedCount = $currentUser ? $currentUser->openBorrowingsCount() : 0;
 
-        return view('books.show', compact('book','users', 'isBorrowed', 'borrowedCount'));
+        $currentUser = auth()->user();
+        $debit = $currentUser ? $currentUser->debit : 0;
+
+        return view('books.show', compact('book','users', 'isBorrowed', 'borrowedCount', 'debit'));
     }
 
     public function index()

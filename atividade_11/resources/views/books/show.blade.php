@@ -44,7 +44,12 @@
     <div class="card mb-4 ">
         <div class="card-header">Registrar Empréstimo</div>
         @if($borrowedCount >= 5)
-            <p style="color:red;">Você atingiu o limite máximo de 5 livros emprestados.</p>
+            <div class="alert alert-warning">Você atingiu o limite máximo de 5 livros emprestados.</div>
+        @endif
+        @if($debit > 0)
+            <div class="alert alert-danger">
+                Você possui uma multa pendente de R$ {{ number_format($debit, 2) }}. Pagamento obrigatório para realizar novos empréstimos.
+            </div>
         @endif
         @if($isBorrowed)
             <div class="alert alert-warning">
@@ -63,7 +68,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success" @if($borrowedCount >= 5) disabled @endif>Registrar Empréstimo</button>
+                    <button type="submit" class="btn btn-success" @if($borrowedCount >= 5 || $debit > 0) disabled @endif>Registrar Empréstimo</button>
                 </form>
             </div>
         @endif

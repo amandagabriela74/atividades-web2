@@ -24,6 +24,10 @@ class BorrowingController extends Controller
         if ($user->openBorrowingsCount() >= 5) {
             return redirect()->back()->withErrors('O usuário já possui o limite máximo de 5 livros emprestados.');
         }
+        
+        if ($user->debit > 0) {
+            return redirect()->back()->withErrors('Usuário possui débitos pendentes e não pode realizar empréstimos.');
+        }
 
         Borrowing::create([
             'user_id' => $request->user_id,
@@ -36,12 +40,35 @@ class BorrowingController extends Controller
 
     public function returnBook(Borrowing $borrowing)
     {
+        $now = now();
+        $borrowedAt = $borrowing->borrowed_at;
+        $diffDays = $borrowedAt->diffInDays($now);
+
+        $fine = 0;
+
+        if ($diffDays > 15) {
+            $lateDays = $diffDays - 15;
+            $fine = $lateDays * 0.50;
+
+            // Atualiza débito do usuário
+            $user = $borrowing->user;
+            $user->debit += $fine;
+            $user->save();
+        }
+
+        // Marca devolução
         $borrowing->update([
-            'returned_at' => now(),
+            'returned_at' => $now,
         ]);
 
-        return redirect()->route('books.show', $borrowing->book_id)->with('success', 'Devolução registrada com sucesso.');
+        $message = 'Devolução registrada com sucesso.';
+        if ($fine > 0) {
+            $message .= ' Multa aplicada: R$ ' . number_format($fine, 2);
+        }
+
+        return redirect()->route('books.show', $borrowing->book_id)->with('success', $message);
     }
+
 
     public function userBorrowings(User $user)
     {
