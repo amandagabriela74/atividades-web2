@@ -15,12 +15,14 @@ class BookController extends Controller
     // Formulário com input de ID
     public function createWithId()
     {
+        $this->authorize('create', Book::class);
         return view('books.create-id');
     }
 
     // Salvar livro com input de ID
     public function storeWithId(Request $request)
     {
+        $this->authorize('create', Book::class); 
         $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
@@ -36,6 +38,7 @@ class BookController extends Controller
     // Formulário com input select
     public function createWithSelect()
     {
+        $this->authorize('create', Book::class);
         $publishers = Publisher::all();
         $authors = Author::all();
         $categories = Category::all();
@@ -46,6 +49,7 @@ class BookController extends Controller
     // Salvar livro com input select
     public function storeWithSelect(Request $request)
     {
+        $this->authorize('create', Book::class); 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
@@ -66,6 +70,7 @@ class BookController extends Controller
 
     public function edit(Book $book)
     {
+         $this->authorize('update', $book);
         $publishers = Publisher::all();
         $authors = Author::all();
         $categories = Category::all();
@@ -75,6 +80,7 @@ class BookController extends Controller
 
     public function update(Request $request, Book $book)
     {
+         $this->authorize('update', $book);
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
@@ -117,6 +123,9 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
+        // Verifica permissão usando a policy
+        $this->authorize('delete', $book);
+
         // Deleta a imagem se existir e não for a padrão
         if ($book->cover_image && $book->cover_image !== 'default-cover.jpg') {
             Storage::disk('public')->delete($book->cover_image);
