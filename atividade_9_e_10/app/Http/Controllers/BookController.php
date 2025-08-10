@@ -113,7 +113,10 @@ class BookController extends Controller
         // Verifica se livro está emprestado
         $isBorrowed = $book->hasOpenBorrowing();
 
-        return view('books.show', compact('book','users', 'isBorrowed'));
+        $currentUser = auth()->user();
+        $borrowedCount = $currentUser ? $currentUser->openBorrowingsCount() : 0;
+
+        return view('books.show', compact('book','users', 'isBorrowed', 'borrowedCount'));
     }
 
     public function index()

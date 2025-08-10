@@ -14,10 +14,15 @@ class BorrowingController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
+        $user = User::find($request->user_id);
 
          // Verifica empréstimo aberto no pivot (borrowings) do livro
         if ($book->hasOpenBorrowing()) {
             return redirect()->back()->withErrors('Este livro já está emprestado e não foi devolvido.');
+        }
+
+        if ($user->openBorrowingsCount() >= 5) {
+            return redirect()->back()->withErrors('O usuário já possui o limite máximo de 5 livros emprestados.');
         }
 
         Borrowing::create([

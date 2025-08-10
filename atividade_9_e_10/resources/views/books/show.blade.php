@@ -43,6 +43,9 @@
     <!-- Formulário para Empréstimos -->
     <div class="card mb-4 ">
         <div class="card-header">Registrar Empréstimo</div>
+        @if($borrowedCount >= 5)
+            <p style="color:red;">Você atingiu o limite máximo de 5 livros emprestados.</p>
+        @endif
         @if($isBorrowed)
             <div class="alert alert-warning">
                 Este livro está atualmente emprestado e não disponível.
@@ -60,7 +63,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success">Registrar Empréstimo</button>
+                    <button type="submit" class="btn btn-success" @if($borrowedCount >= 5) disabled @endif>Registrar Empréstimo</button>
                 </form>
             </div>
         @endif

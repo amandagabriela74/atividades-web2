@@ -52,4 +52,10 @@ class User extends Authenticatable
                     ->withPivot('id','borrowed_at', 'returned_at')
                     ->withTimestamps();
     }
+
+    public function openBorrowingsCount()
+    {
+        return $this->borrowings()->wherePivotNull('returned_at')->count();
+    }
+
 }
