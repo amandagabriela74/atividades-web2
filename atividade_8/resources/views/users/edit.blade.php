@@ -18,6 +18,11 @@
             <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
         </div>
 
+        <div class="mb-3">
+            <label for="role" class="form-label">Permissão</label>
+            <input type="role" class="form-control" id="role" name="role" value="{{ old('role', $user->role) }}" required>
+        </div>
+
         <button type="submit" class="btn btn-success">Salvar</button>
         <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancelar</a>
     </form>
