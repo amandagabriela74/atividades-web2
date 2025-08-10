@@ -21,6 +21,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Author::class);
         return view('authors.create');
     }
 
@@ -29,6 +30,7 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Author::class);
         $request->validate([
             'name' => 'required|string|unique:authors|max:255',
         ]);
@@ -51,6 +53,7 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
+        $this->authorize('update', Author::class);
         return view('authors.edit', compact('author'));
     }
 
@@ -73,6 +76,7 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
+        $this->authorize('delete', $author);
         $author->delete();
 
         return redirect()->route('authors.index')->with('success', 'Author excluído com sucesso.');
